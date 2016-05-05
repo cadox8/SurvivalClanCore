@@ -1,0 +1,63 @@
+name: SurvivalClanCore
+main: es.projectalpha.scc.SurvivalClanCore
+version: 1.7.7
+authors: [cadox8, Wikijito7]
+
+commands:
+   raza:
+     description: Comando de Razas
+   mantenimiento:
+     description: Comando de mantenimiento
+     aliases: [man]
+   efecto:
+     description: Comando para poner efectos
+   befecto:
+     description: Comando para poner efectos
+   ayuda:
+     description: Ayuda del servidor
+   emociones:
+     description: Muestra emociones
+   golpear:
+     description: Golpea!
+   abrazar:
+     description: Abraza!
+   besar:
+     description: Amor!
+   mirar:
+     description: Mira!
+   mirarm:
+     description: Mira mal!
+   mirars:
+     description: Mira sensualmente!
+   poke:
+     description: Pokea a la gente
+   vomitar:
+     description: Vomita a la gente
+   lanzar:
+     description: Lanza cosas!
+   reir:
+     description: riete de algo!
+   bexp:
+     description: Experiencia para todos!
+   airdrop:
+     description: AirDrop!
+   avisar:
+     description: Avisa a un jugador
+   good:
+     description: Nada...
+   cadox8:
+     description: Nada...
+   ts:
+     description: Nada...
+   web:
+     description: Nada...
+   twitter:
+     description: Nada...
+   youtube:
+     description: Nada...
+   foro:
+     description: Nada...
+   purpurina:
+     description: Nada...
+   enfado:
+     description: Nada...
