@@ -41,6 +41,8 @@ public class AirDropEvents implements Listener {
 
 	private int f;
 
+	private boolean running = false;
+
 	@EventHandler
 	public void onPlace(BlockPlaceEvent e){
 		Player p = e.getPlayer();
@@ -57,83 +59,100 @@ public class AirDropEvents implements Listener {
 
 		if (b.getType() == i.getType()) {
 			if (b.getType().equals(Material.ENDER_CHEST)) {
+				if (i.getItemMeta().getDisplayName().equalsIgnoreCase(Messages.cSmall) || i.getItemMeta().getDisplayName().equalsIgnoreCase(Messages.cMedium) || i.getItemMeta().getDisplayName().equalsIgnoreCase(Messages.cBig)) {
 
-				for (int y2 = 0; y2 < y3; y2++) {
-					if (w.getHighestBlockYAt(new Location(w, x, y, z)) <= 13) {
-						p.sendMessage(Messages.prefix + ChatColor.RED + "Debes estar al aire libre para hacer esto");
+					//					for (int y2 = 0; y2 < y3; y2++) {
+					//						if (w.getBlockAt(new Location(w, x, y, z)).getType() != Material.AIR) {
+					//							p.sendMessage(Messages.prefix + ChatColor.RED + "Debes estar al aire libre para hacer esto");
+					//							return;
+					//						}
+					//					}
+
+					if (running) {
+						p.sendMessage(Messages.prefix + ChatColor.RED + "Ya hay un AirDrop abriendose");
+						e.setCancelled(true);
 						return;
 					}
-				}
 
-				if (i.getItemMeta().getDisplayName().equalsIgnoreCase(Messages.cSmall)) {
-					e.setCancelled(true);
+					running = true;
 
-					AirDrop.cSmall.add(p);
-					AirDrop.lSmall.put(e.getBlock().getLocation(), id);
+					if (i.getItemMeta().getDisplayName().equalsIgnoreCase(Messages.cSmall)) {
+						e.setCancelled(true);
 
-					type = "Pequeño";
-				}
+						AirDrop.cSmall.add(p);
+						AirDrop.lSmall.put(e.getBlock().getLocation(), id);
 
-				if (i.getItemMeta().getDisplayName().equalsIgnoreCase(Messages.cMedium)) {
-					e.setCancelled(true);
-
-					AirDrop.cMedium.add(p);
-					AirDrop.lMedium.put(e.getBlock().getLocation(), id);
-
-					type = "Mediano";
-				}
-
-				if (i.getItemMeta().getDisplayName().equalsIgnoreCase(Messages.cBig)) {
-					e.setCancelled(true);
-
-					AirDrop.cBig.add(p);
-					AirDrop.lBig.put(e.getBlock().getLocation(), id);
-
-					type = "Grande";
-				}
-
-				p.getInventory().setItemInMainHand(new ItemStack(Material.AIR));
-
-				List<String> lore = new ArrayList<String>();
-
-				lore.clear();
-				lore.add(id + "");
-
-				ItemStack k = new ItemStack(Material.TRIPWIRE_HOOK);
-				ItemMeta km = k.getItemMeta();
-				km.setDisplayName(ChatColor.YELLOW + "Llave AirDrop " + type);
-				km.setLore(lore);
-				k.addUnsafeEnchantment(Enchantment.ARROW_DAMAGE, 1);
-				km.addItemFlags(ItemFlag.HIDE_ENCHANTS);
-				k.setItemMeta(km);
-
-				p.getInventory().setItemInMainHand(k);
-
-				f = Bukkit.getScheduler().scheduleSyncRepeatingTask(this.plugin, new Runnable() {
-					@Override
-					public void run(){
-
-						y3--;
-
-						w.getBlockAt((int) x, (int) y + y3, (int) z).setType(Material.ENDER_CHEST);
-						w.getBlockAt((int) x, (int) y + (y3 + 1), (int) z).setType(Material.AIR);
-
-						w.playEffect(new Location(w, x, y, z), Effect.FIREWORK_SHOOT, 5);
-						w.playEffect(new Location(w, x, y, z), Effect.FIREWORK_SHOOT, 5);
-						w.playEffect(new Location(w, x, y, z), Effect.FIREWORK_SHOOT, 5);
-
-						w.playEffect(new Location(w, x, y + y3, z), Effect.FLAME, 10);
-						w.playEffect(new Location(w, x, y + y3, z), Effect.FLAME, 10);
-						w.playEffect(new Location(w, x, y + y3, z), Effect.FLAME, 10);
-
-						if (y3 == 0) {
-							w.playEffect(new Location(w, x, y, z), Effect.FOOTSTEP, 20);
-							w.playSound(new Location(w, x, y, z), Sound.BLOCK_ANVIL_FALL, 10.0F, 10.0F);
-							y3 = 13;
-							Bukkit.getScheduler().cancelTask(f);
-						}
+						type = "Pequeño";
 					}
-				}, 0L, 10L);
+
+					if (i.getItemMeta().getDisplayName().equalsIgnoreCase(Messages.cMedium)) {
+						e.setCancelled(true);
+
+						AirDrop.cMedium.add(p);
+						AirDrop.lMedium.put(e.getBlock().getLocation(), id);
+
+						type = "Mediano";
+					}
+
+					if (i.getItemMeta().getDisplayName().equalsIgnoreCase(Messages.cBig)) {
+						e.setCancelled(true);
+
+						AirDrop.cBig.add(p);
+						AirDrop.lBig.put(e.getBlock().getLocation(), id);
+
+						type = "Grande";
+					}
+
+					if (p.getInventory().getItemInMainHand().getAmount() > 1) {
+						p.getInventory().setItemInMainHand(new ItemStack(p.getInventory().getItemInMainHand().getType(), p.getInventory().getItemInMainHand().getAmount() - 1));
+					} else {
+						p.getInventory().setItemInMainHand(new ItemStack(Material.AIR));
+					}
+
+					List<String> lore = new ArrayList<String>();
+
+					lore.clear();
+					lore.add(id + "");
+
+					ItemStack k = new ItemStack(Material.TRIPWIRE_HOOK);
+					ItemMeta km = k.getItemMeta();
+					km.setDisplayName(ChatColor.YELLOW + "Llave AirDrop " + type);
+					km.setLore(lore);
+					k.addUnsafeEnchantment(Enchantment.ARROW_DAMAGE, 1);
+					km.addItemFlags(ItemFlag.HIDE_ENCHANTS);
+					k.setItemMeta(km);
+
+					p.getInventory().setItemInMainHand(k);
+
+					f = Bukkit.getScheduler().scheduleSyncRepeatingTask(this.plugin, new Runnable() {
+						@Override
+						public void run(){
+
+							y3--;
+
+							w.getBlockAt((int) x, (int) y + y3, (int) z).setType(Material.ENDER_CHEST);
+							w.getBlockAt((int) x, (int) y + (y3 + 1), (int) z).setType(Material.AIR);
+
+							for (double d = 0; d < 1.0; d++) {
+								w.playEffect(new Location(w, x - d, y + (y3 + 1), z - d), Effect.SMOKE, 50);
+								w.playEffect(new Location(w, x, y + (y3 + 1), z - d), Effect.SMOKE, 50);
+								w.playEffect(new Location(w, x - d, y + (y3 + 1), z), Effect.SMOKE, 50);
+								w.playEffect(new Location(w, x, y + (y3 + 1), z + d), Effect.SMOKE, 50);
+								w.playEffect(new Location(w, x + d, y + (y3 + 1), z), Effect.SMOKE, 50);
+							}
+
+							w.playSound(new Location(w, x, y + (y3 + 1), z), Sound.BLOCK_DISPENSER_LAUNCH, 6.0F, 6.0F);
+
+							if (y3 == 0) {
+								w.playEffect(new Location(w, x, y, z), Effect.EXPLOSION_HUGE, 20);
+								w.playSound(new Location(w, x, y, z), Sound.ENTITY_GENERIC_EXPLODE, 10.0F, 10.0F);
+								y3 = 13;
+								running = false;
+								Bukkit.getScheduler().cancelTask(f);
+							}
+						}
+					}, 0L, 5L);
+				}
 			}
 		}
 	}
@@ -151,16 +170,10 @@ public class AirDropEvents implements Listener {
 		ArrayList<ItemStack> item;
 
 		if (AirDrop.cSmall.contains(p) || AirDrop.cMedium.contains(p) || AirDrop.cBig.contains(p)) {
-
 			if (e.getAction() == Action.RIGHT_CLICK_BLOCK) {
 				if (p.getInventory().getItemInMainHand().hasItemMeta() && p.getInventory().getItemInMainHand().getItemMeta().hasLore()) {
 
 					if (b.getType() != Material.ENDER_CHEST) {
-						return;
-					}
-
-					if (!p.getInventory().getItemInMainHand().getItemMeta().getDisplayName().contains(ChatColor.YELLOW + "Llave AirDrop ")) {
-						p.sendMessage(Messages.prefix + ChatColor.RED + "Tienes que abrirlo con la llave");
 						return;
 					}
 
@@ -198,17 +211,19 @@ public class AirDropEvents implements Listener {
 						if (AirDrop.lSmall.containsKey(l)) {
 							if (AirDrop.lSmall.get(l) == id) {
 								AirDrop.lSmall.remove(l);
+								AirDrop.cSmall.remove(p);
 								p.getInventory().setItemInMainHand(new ItemStack(Material.AIR));
 
-								l.getWorld().playEffect(l, Effect.LAVA_POP, 10);
-								l.getWorld().playSound(l, Sound.BLOCK_ANVIL_HIT, 4.0F, 4.0F);
+								e.getClickedBlock().setType(Material.AIR);
+								l.getWorld().playSound(l, Sound.ENTITY_PLAYER_LEVELUP, 10.0F, 10.0F);
+								AirDrop.spawnFirework(l);
 
 								p.sendMessage(Messages.prefix + ChatColor.GREEN + "Se te han dado los items");
 
 								item = AirDrop.getItems(1, lucky, unlucky, lvlLucky, lvlUnlucky);
 
-								for (int items = 0; items < item.size(); items++) {
-									p.getInventory().addItem(item.get(items));
+								for (int g = 0; g < item.size(); g++) {
+									p.getInventory().addItem(item.get(g));
 								}
 							}
 						}
@@ -218,10 +233,12 @@ public class AirDropEvents implements Listener {
 						if (AirDrop.lMedium.containsKey(l)) {
 							if (AirDrop.lMedium.get(l) == id) {
 								AirDrop.lMedium.remove(l);
+								AirDrop.cMedium.remove(p);
 								p.getInventory().setItemInMainHand(new ItemStack(Material.AIR));
 
-								l.getWorld().playEffect(l, Effect.LAVA_POP, 10);
-								l.getWorld().playSound(l, Sound.BLOCK_ANVIL_HIT, 4.0F, 4.0F);
+								e.getClickedBlock().setType(Material.AIR);
+								l.getWorld().playSound(l, Sound.ENTITY_PLAYER_LEVELUP, 10.0F, 10.0F);
+								AirDrop.spawnFirework(l);
 
 								p.sendMessage(Messages.prefix + ChatColor.GREEN + "Se te han dado los items");
 
@@ -238,10 +255,12 @@ public class AirDropEvents implements Listener {
 						if (AirDrop.lBig.containsKey(l)) {
 							if (AirDrop.lBig.get(l) == id) {
 								AirDrop.lBig.remove(l);
+								AirDrop.cBig.remove(p);
 								p.getInventory().setItemInMainHand(new ItemStack(Material.AIR));
 
-								l.getWorld().playEffect(l, Effect.LAVA_POP, 10);
-								l.getWorld().playSound(l, Sound.BLOCK_ANVIL_HIT, 4.0F, 4.0F);
+								e.getClickedBlock().setType(Material.AIR);
+								l.getWorld().playSound(l, Sound.ENTITY_PLAYER_LEVELUP, 10.0F, 10.0F);
+								AirDrop.spawnFirework(l);
 
 								p.sendMessage(Messages.prefix + ChatColor.GREEN + "Se te han dado los items");
 
@@ -253,7 +272,6 @@ public class AirDropEvents implements Listener {
 							}
 						}
 					}
-					e.getClickedBlock().setType(Material.AIR);
 				}
 			}
 		}

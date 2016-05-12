@@ -1,5 +1,8 @@
 package es.projectalpha.scc.cmd;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.command.Command;
@@ -17,7 +20,6 @@ public class AirDropCMD implements CommandExecutor {
 		Player p = (Player) sender;
 
 		if (cmd.getName().equalsIgnoreCase("airdrop") && ((sender instanceof Player))) {
-			System.out.println("Done");
 			if (args.length == 0) {
 				p.sendMessage(Messages.prefix + ChatColor.RED + "Debes seleccionar un cofre. " + ChatColor.YELLOW + "/airdrop <peque/mediano/grande>");
 			}
@@ -28,7 +30,7 @@ public class AirDropCMD implements CommandExecutor {
 					cm.setDisplayName(Messages.cSmall);
 					c.setItemMeta(cm);
 					p.getInventory().addItem(c);
-					p.sendMessage(Messages.prefix + ChatColor.GREEN + "Se te ha dado el cofre " + ChatColor.RED + "pequeńo");
+					p.sendMessage(Messages.prefix + ChatColor.GREEN + "Se te ha dado el cofre " + ChatColor.RED + "pequeño");
 				}
 				if (args[0].equalsIgnoreCase("mediano")) {
 					ItemStack c = new ItemStack(Material.ENDER_CHEST);
@@ -45,6 +47,20 @@ public class AirDropCMD implements CommandExecutor {
 					c.setItemMeta(cm);
 					p.getInventory().addItem(c);
 					p.sendMessage(Messages.prefix + ChatColor.GREEN + "Se te ha dado el cofre " + ChatColor.RED + "grande");
+				}
+			}
+			if (args.length == 2) {
+				if (args[0].equalsIgnoreCase("items")) {
+					List<String> lore = new ArrayList<String>();
+					lore.add(args[1]);
+
+					ItemStack c = new ItemStack(Material.BLAZE_POWDER);
+					ItemMeta cm = c.getItemMeta();
+					cm.setDisplayName(ChatColor.DARK_AQUA + "AirDrop Items");
+					cm.setLore(lore);
+					c.setItemMeta(cm);
+					p.getInventory().addItem(c);
+					p.sendMessage(Messages.prefix + ChatColor.GREEN + "Se te ha dado el " + ChatColor.RED + "Selector de Items");
 				}
 			}
 		}

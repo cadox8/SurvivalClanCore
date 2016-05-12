@@ -10,6 +10,7 @@ import org.bukkit.scoreboard.Objective;
 import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.Team;
 
+import es.projectalpha.scc.api.TPSAPI;
 import es.projectalpha.scc.api.TabAPI;
 import es.projectalpha.scc.cmd.AddEffects;
 import es.projectalpha.scc.cmd.AirDropCMD;
@@ -21,13 +22,16 @@ import es.projectalpha.scc.cmd.Rol;
 import es.projectalpha.scc.cmd.Social;
 import es.projectalpha.scc.cmd.WikiTonterias;
 import es.projectalpha.scc.events.AirDropEvents;
+import es.projectalpha.scc.events.Colectibles;
 import es.projectalpha.scc.events.Damage;
 import es.projectalpha.scc.events.Effects;
 import es.projectalpha.scc.events.Join;
 import es.projectalpha.scc.events.Leave;
+import es.projectalpha.scc.events.Level;
 import es.projectalpha.scc.events.Move;
 import es.projectalpha.scc.events.Talk;
 import es.projectalpha.scc.signs.JoinRaza;
+import es.projectalpha.scc.signs.Teleport;
 import es.projectalpha.scc.utils.Messages;
 import es.projectalpha.scc.utils.Prefix;
 import es.projectalpha.scc.utils.Teams;
@@ -49,6 +53,8 @@ public class SurvivalClanCore extends JavaPlugin {
 	public Teams teams;
 	public static Prefix prefix;
 
+	private double lessTPS = 0;
+
 	public static SurvivalClanCore pl;
 
 	public void onEnable(){
@@ -57,7 +63,7 @@ public class SurvivalClanCore extends JavaPlugin {
 		regCommands();
 
 		this.sb = Bukkit.getScoreboardManager().getNewScoreboard();
-		this.obj = this.sb.registerNewObjective("dummy", "inicio");
+		this.obj = this.sb.registerNewObjective("scc", "dummy");
 
 		this.teams = new Teams(this);
 		if (this.teams != null) {
@@ -66,12 +72,25 @@ public class SurvivalClanCore extends JavaPlugin {
 		}
 		SurvivalClanCore.prefix = new Prefix(this);
 
+		Bukkit.getServer().getScheduler().scheduleSyncRepeatingTask(this, new TPSAPI(), 100L, 1L);
+
 		Bukkit.getScheduler().runTaskTimer(this, new Runnable() {
 			public void run(){
 				prefix.refreshPrefix();
 
+				if (lessTPS == 0) {
+					lessTPS = TPSAPI.getTPS();
+				}
+
+				if (TPSAPI.getTPS() < lessTPS) {
+					lessTPS = TPSAPI.getTPS();
+				}
+
+				if (lessTPS <= 15) {
+					Bukkit.broadcastMessage(Messages.prefix + ChatColor.RED + "El servidor esta a menos de 15 TPS, si alguien esta explorando, que pare. :D");
+				}
+
 				for (Player p : Bukkit.getOnlinePlayers()) {
-					//	Info.setScore(p);
 
 					String capi1 = ChatColor.BOLD.toString() + ChatColor.AQUA + " ProjectAlpha ";
 					String capi2 = ChatColor.BOLD.toString() + ChatColor.RED + " ProjectAlpha ";
@@ -79,8 +98,8 @@ public class SurvivalClanCore extends JavaPlugin {
 					String capi4 = ChatColor.BOLD.toString() + ChatColor.GREEN + " ProjectAlpha ";
 					String g = ChatColor.BOLD.toString() + ChatColor.GOLD + ChatColor.MAGIC + "|||";
 
-					String ip1 = ChatColor.GREEN + "IP: " + ChatColor.AQUA + "projectalpha.es";
-					String ip2 = ChatColor.LIGHT_PURPLE + "IP: " + ChatColor.DARK_GRAY + "projectalpha.es";
+					String ip1 = ChatColor.GREEN + "IP: " + ChatColor.AQUA + "projectalpha.es" + ChatColor.GRAY + " Usuarios: " + ChatColor.LIGHT_PURPLE + Bukkit.getOnlinePlayers().size();
+					String ip2 = ChatColor.LIGHT_PURPLE + "IP: " + ChatColor.DARK_GRAY + "projectalpha.es" + ChatColor.GRAY + " Usuarios: " + ChatColor.LIGHT_PURPLE + Bukkit.getOnlinePlayers().size();
 
 					double id = Math.random();
 
@@ -115,12 +134,15 @@ public class SurvivalClanCore extends JavaPlugin {
 		new Move(this);
 		new Join(this);
 		new Leave(this);
+		new Colectibles(this);
+		new Level(this);
 
 		//EXP
 		//	new Throw(this);
 
 		//Carteles
 		new JoinRaza(this);
+		new Teleport(this);
 
 		//Chat
 		new Talk(this);
@@ -157,6 +179,7 @@ public class SurvivalClanCore extends JavaPlugin {
 		getCommand("cadox8").setExecutor(new WikiTonterias());
 		getCommand("purpurina").setExecutor(new WikiTonterias());
 		getCommand("enfado").setExecutor(new WikiTonterias());
+		getCommand("npc").setExecutor(new WikiTonterias());
 		//Report
 		getCommand("avisar").setExecutor(new Report());
 		//Social

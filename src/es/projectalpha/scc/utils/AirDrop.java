@@ -4,18 +4,23 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Random;
 
+import org.bukkit.Color;
+import org.bukkit.EntityEffect;
+import org.bukkit.FireworkEffect;
+import org.bukkit.FireworkEffect.Type;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
+import org.bukkit.entity.Firework;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.FireworkMeta;
 
 public class AirDrop {
 
 	public static ArrayList<Player> cSmall = new ArrayList<Player>();
 	public static ArrayList<Player> cMedium = new ArrayList<Player>();
 	public static ArrayList<Player> cBig = new ArrayList<Player>();
-
 	public static HashMap<Location, Long> lSmall = new HashMap<Location, Long>();
 	public static HashMap<Location, Long> lMedium = new HashMap<Location, Long>();
 	public static HashMap<Location, Long> lBig = new HashMap<Location, Long>();
@@ -26,6 +31,17 @@ public class AirDrop {
 		long n = r.nextLong();
 
 		return n;
+	}
+
+	public static void spawnFirework(Location l){
+
+		Firework fw = l.getWorld().spawn(l, Firework.class);
+		FireworkMeta fwm = fw.getFireworkMeta();
+		fw.playEffect(EntityEffect.FIREWORK_EXPLODE);
+		fwm.addEffect(FireworkEffect.builder().with(Type.BALL_LARGE).withColor(Color.FUCHSIA).withColor(Color.ORANGE).withColor(Color.WHITE).trail(false).flicker(false).withFade(Color.NAVY).build());
+		fwm.setPower(0);
+		fw.setFireworkMeta(fwm);
+
 	}
 
 	public static ArrayList<ItemStack> getItems(int type, boolean lucky, boolean unlucky, int lvlLucky, int lvlUnlucky){
@@ -43,49 +59,36 @@ public class AirDrop {
 		}
 
 		switch (type) {
-		//Small
 		case 1:
 			add += r.nextInt(2);
-
 			if (add <= -1) {
 				add = 0;
 			}
-
 			for (int x = 0; x < 1 + add; x++) {
 				items.add(getItemsSmall());
 			}
-
 			return items;
-		//Medium
 		case 2:
 			add += r.nextInt(3);
-
 			if (add <= -1) {
 				add = 0;
 			}
-
 			for (int x = 0; x < 3 + add; x++) {
 				items.add(getItemsMedium());
 			}
-
 			return items;
-		//Big
 		case 3:
 			add += r.nextInt(4);
-
 			if (add <= -1) {
 				add = 0;
 			}
-
 			for (int x = 0; x < 5 + add; x++) {
 				items.add(getItemsBig());
 			}
-
-			return items;
-		default:
-			items.add(new ItemStack(Material.AIR));
 			return items;
 		}
+		items.add(new ItemStack(Material.AIR));
+		return items;
 	}
 
 	private static ItemStack getItemsSmall(){
@@ -113,17 +116,8 @@ public class AirDrop {
 		Random r = new Random();
 
 		ItemStack i = new ItemStack(Material.DIRT, r.nextInt(32) + 1);
-		ItemStack i2 = new ItemStack(Material.STONE, r.nextInt(32) + 1);
-		ItemStack i3 = new ItemStack(Material.STONE_SWORD);
-		ItemStack i4 = new ItemStack(Material.SAND, r.nextInt(32) + 1);
-		ItemStack i5 = new ItemStack(Material.LOG, r.nextInt(14) + 1);
-		ItemStack i6 = new ItemStack(Material.STONE_HOE);
 		ItemStack i7 = new ItemStack(Material.DIAMOND, r.nextInt(2) + 1);
 		ItemStack i8 = new ItemStack(Material.WOOD_DOOR, r.nextInt(3) + 1);
-		ItemStack i9 = new ItemStack(Material.WOOD_SWORD);
-		ItemStack i10 = new ItemStack(Material.YELLOW_FLOWER, r.nextInt(32) + 1);
-		ItemStack i11 = new ItemStack(Material.APPLE, r.nextInt(5) + 1);
-		ItemStack i12 = new ItemStack(Material.BEETROOT_SOUP, r.nextInt(2) + 1);
 		ItemStack i13 = new ItemStack(Material.BLAZE_ROD, r.nextInt(3) + 1);
 		ItemStack i14 = new ItemStack(Material.VINE, r.nextInt(4) + 1);
 		ItemStack i15 = new ItemStack(Material.WEB, r.nextInt(31) + 1);
@@ -153,7 +147,7 @@ public class AirDrop {
 		ItemStack i39 = new ItemStack(Material.PACKED_ICE, r.nextInt(20) + 1);
 		ItemStack i40 = new ItemStack(Material.FLOWER_POT, r.nextInt(5) + 1);
 
-		ItemStack[] items = { i, i2, i3, i4, i5, i6, i7, i8, i9, i10, i11, i12, i13, i14, i15, i16, i17, i18, i19, i20, i21, i22, i23, i24, i25, i26, i27, i28, i29, i30, i31, i32, i33, i34, i35, i36, i37, i38, i39, i40 };
+		ItemStack[] items = { i, i7, i8, i13, i14, i15, i16, i17, i18, i19, i20, i21, i22, i23, i24, i25, i26, i27, i28, i29, i30, i31, i32, i33, i34, i35, i36, i37, i38, i39, i40 };
 
 		return items[r.nextInt(items.length)];
 	}
@@ -209,7 +203,7 @@ public class AirDrop {
 		i.addUnsafeEnchantment(Enchantment.DAMAGE_ALL, 10);
 		i.addUnsafeEnchantment(Enchantment.FIRE_ASPECT, 2);
 
-		ItemStack[] items = { i, i2, i3, i4, i5, i6, i7, i8, i9, i10, i11, i12, i13, i14, i15, i16, i17, i18, i19, i20, i21, i22, i23, i24, i25, i26, i27, i28, i29, i30, i31, i32, i33, i34, i35, i36, i37, i38, i39, i40 };
+		ItemStack[] items = { i, i2, i3, i4, i5, i6, i7, i8, i9, i10, i11, i12, i13, i14, i15, i16, i17, i18, i19, i20, i21, i22, i23, i24, i25, i26, i27, i28, i29, i30, i31, i32, i33, i34, i35, i36, i37, i38, i39, i40, ItemUtils.getBone(), ItemUtils.getPoppy(), ItemUtils.getRing() };
 
 		return items[r.nextInt(items.length)];
 	}

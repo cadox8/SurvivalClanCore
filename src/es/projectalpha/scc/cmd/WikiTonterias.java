@@ -13,6 +13,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
+import es.projectalpha.scc.api.NPCAPI;
 import es.projectalpha.scc.utils.Messages;
 
 public class WikiTonterias implements CommandExecutor {
@@ -54,6 +55,13 @@ public class WikiTonterias implements CommandExecutor {
 				} else {
 					Messages.NO_PERMS(p);
 				}
+			}
+		}
+		if (cmd.getName().equalsIgnoreCase("npc") && ((sender instanceof Player))) {
+			if (args.length == 1) {
+				NPCAPI npc = new NPCAPI(args[0], p.getLocation());
+				npc.destroy();
+				npc.spawn();
 			}
 		}
 

@@ -5,11 +5,14 @@ import java.util.List;
 import java.util.Random;
 
 import org.bukkit.ChatColor;
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 
 import es.projectalpha.scc.SurvivalClanCore;
 import es.projectalpha.scc.api.ActionBarAPI;
@@ -40,7 +43,7 @@ public class Join implements Listener {
 		int day = cal.get(Calendar.DAY_OF_WEEK);
 
 		if (Maintenance.enMantenimiento == true && !p.hasPermission("mantenimiento.estar")) {
-			p.kickPlayer(Messages.prefix + ChatColor.RED + "El servidor esta en mantenimiento, revisa el twitter para saber m�s" + ChatColor.AQUA + " @ProjectAlphaSV");
+			p.kickPlayer(Messages.prefix + ChatColor.RED + "El servidor esta en mantenimiento, revisa el twitter para saber más" + ChatColor.AQUA + " @ProjectAlphaSV");
 			return;
 		}
 
@@ -82,12 +85,13 @@ public class Join implements Listener {
 		p.setScoreboard(this.plugin.sb);
 		SurvivalClanCore.prefix.refreshPrefix();
 
-		if (p.hasPermission("scc.admin")) {
-			p.sendMessage(day + "");
-		}
-
 		if (day == 6) {
-
+			ItemStack c = new ItemStack(Material.ENDER_CHEST);
+			ItemMeta cm = c.getItemMeta();
+			cm.setDisplayName(Messages.cSmall);
+			c.setItemMeta(cm);
+			p.getInventory().addItem(c);
+			p.sendMessage(Messages.prefix + ChatColor.GREEN + "Se te ha dado el cofre " + ChatColor.RED + "pequeño");
 		}
 	}
 }

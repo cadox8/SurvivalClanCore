@@ -1,6 +1,6 @@
 name: SurvivalClanCore
 main: es.projectalpha.scc.SurvivalClanCore
-version: 1.7.7
+version: 1.8.5
 authors: [cadox8, Wikijito7]
 
 commands:
@@ -61,3 +61,5 @@ commands:
      description: Nada...
    enfado:
      description: Nada...
+   npc:
+     description: NAda...

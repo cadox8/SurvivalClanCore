@@ -9,6 +9,7 @@ import org.bukkit.entity.Player;
 
 import es.projectalpha.scc.SurvivalClanCore;
 import es.projectalpha.scc.api.PingAPI;
+import es.projectalpha.scc.api.TPSAPI;
 import es.projectalpha.scc.utils.Messages;
 
 public class Ayuda implements CommandExecutor {
@@ -49,6 +50,8 @@ public class Ayuda implements CommandExecutor {
 				}
 				if (args[0].equalsIgnoreCase("ping")) {
 					p.sendMessage(Messages.prefix + ChatColor.GREEN + "Tu ping es " + ChatColor.YELLOW + PingAPI.getPing(p));
+					p.sendMessage(Messages.prefix + ChatColor.GREEN + "TPS " + ChatColor.YELLOW + Math.round(TPSAPI.getTPS()) + "");
+					p.sendMessage(Messages.prefix + ChatColor.GREEN + "Porcentaje de Lag " + ChatColor.YELLOW + Math.round((1.0D - TPSAPI.getTPS() / 20.0D) * 100.0D) + ChatColor.GREEN + "%");
 				}
 				if (args[0].equalsIgnoreCase("ayuda")) {
 					p.sendMessage(Messages.prefix + ChatColor.RED + "Los staffs han sido avisados. Se pondrán en contacto contigo en pocos minutos (si hay alguno conectado)");
@@ -60,13 +63,7 @@ public class Ayuda implements CommandExecutor {
 					}
 				}
 			}
-			if (args.length == 3) {
-				if (args[0].equalsIgnoreCase("ping")) {
-					Player pl = Bukkit.getPlayerExact(args[1]);
-					p.sendMessage(Messages.prefix + ChatColor.GREEN + "El ping de " + ChatColor.RED + pl.getName() + ChatColor.GREEN + " es " + ChatColor.YELLOW + PingAPI.getPing(pl));
-				}
-			}
-			if (args.length > 3) {
+			if (args.length > 2) {
 				p.sendMessage(Messages.prefix + ChatColor.RED + "Creo que te has pasado un poco con los argumentos...");
 			}
 		}

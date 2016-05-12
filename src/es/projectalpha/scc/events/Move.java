@@ -2,9 +2,11 @@ package es.projectalpha.scc.events;
 
 import org.bukkit.Effect;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.entity.EntityToggleGlideEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 
 import es.projectalpha.scc.SurvivalClanCore;
@@ -21,8 +23,26 @@ public class Move implements Listener {
 	}
 
 	@EventHandler
+	public void onEntityToggleGlideEvent(EntityToggleGlideEvent event){
+		if (((event.getEntity() instanceof Player)) && (playerCanSwim((Player) event.getEntity()))) {
+			event.setCancelled(true);
+		}
+	}
+
+	public boolean playerCanSwim(Player p){
+		if ((p.getLocation().getBlock().getType() == Material.STATIONARY_WATER) && (p.getLocation().subtract(0.0D, 1, 0.0D).getBlock().getType() == Material.STATIONARY_WATER) && (p.getVehicle() == null)) {
+			return true;
+		}
+		return false;
+	}
+
+	@EventHandler
 	public void onPlayerMove(PlayerMoveEvent e){
 		Player p = e.getPlayer();
+
+		if (playerCanSwim(p)) {
+			p.setGliding(true);
+		}
 
 		if (this.plugin.teleport.contains(p.getName())) {
 			if ((e.getFrom().getX() != e.getTo().getX()) || (e.getFrom().getZ() != e.getTo().getZ()) || (e.getFrom().getY() != e.getTo().getY())) {

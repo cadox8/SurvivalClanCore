@@ -31,10 +31,10 @@ public class JoinRaza implements Listener {
 		Player p = e.getPlayer();
 
 		if (p.hasPermission("rolcore.admin")) {
-			if (e.getLine(0).equalsIgnoreCase("{RolCore}")) {
+			if (e.getLine(0).equalsIgnoreCase("{SCC}")) {
 				if (TeamsYML.getTeams().getString(e.getLine(1)) != null) {
 					String t = e.getLine(1);
-					e.setLine(0, ChatColor.GREEN + "RolCore");
+					e.setLine(0, ChatColor.GREEN + "SCC");
 					e.setLine(1, ChatColor.AQUA + "***************");
 					e.setLine(2, ChatColor.DARK_PURPLE + "Entrar");
 					e.setLine(3, t);
@@ -57,8 +57,8 @@ public class JoinRaza implements Listener {
 			List<String> b = TeamsYML.getTeams().getStringList(team + ".members");
 			List<String> PIT;
 
-			if (s.getLine(0).equalsIgnoreCase(ChatColor.GREEN + "RolCore")) {
-				if (team.toLowerCase() == "nomada") {
+			if (s.getLine(0).equalsIgnoreCase(ChatColor.GREEN + "SCC")) {
+				if (team.toLowerCase().contentEquals("nomada")) {
 					a.add(p.getName());
 					b.remove(p.getName());
 					TeamsYML.getTeams().set(team + ".members", null);
