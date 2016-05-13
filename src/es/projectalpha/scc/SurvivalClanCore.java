@@ -53,8 +53,6 @@ public class SurvivalClanCore extends JavaPlugin {
 	public Teams teams;
 	public static Prefix prefix;
 
-	private double lessTPS = 0;
-
 	public static SurvivalClanCore pl;
 
 	public void onEnable(){
@@ -77,18 +75,6 @@ public class SurvivalClanCore extends JavaPlugin {
 		Bukkit.getScheduler().runTaskTimer(this, new Runnable() {
 			public void run(){
 				prefix.refreshPrefix();
-
-				if (lessTPS == 0) {
-					lessTPS = TPSAPI.getTPS();
-				}
-
-				if (TPSAPI.getTPS() < lessTPS) {
-					lessTPS = TPSAPI.getTPS();
-				}
-
-				if (lessTPS <= 15) {
-					Bukkit.broadcastMessage(Messages.prefix + ChatColor.RED + "El servidor esta a menos de 15 TPS, si alguien esta explorando, que pare. :D");
-				}
 
 				for (Player p : Bukkit.getOnlinePlayers()) {
 

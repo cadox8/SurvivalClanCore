@@ -2,6 +2,7 @@ package es.projectalpha.scc.events;
 
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.entity.EntityCreatePortalEvent;
 import org.bukkit.event.player.PlayerLevelChangeEvent;
 
 import es.projectalpha.scc.SurvivalClanCore;
@@ -28,6 +29,13 @@ public class Level {
 			if (lvln > lvlv) {
 				p.setMaxHealth(p.getMaxHealth() + 1);
 			}
+		}
+	}
+
+	@EventHandler
+	public void onPortalCreate(EntityCreatePortalEvent e){
+		if (e.getEntity() instanceof Player) {
+			e.setCancelled(true);
 		}
 	}
 }

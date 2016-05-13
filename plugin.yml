@@ -1,6 +1,6 @@
 name: SurvivalClanCore
 main: es.projectalpha.scc.SurvivalClanCore
-version: 1.8.5
+version: 1.8.6
 authors: [cadox8, Wikijito7]
 
 commands:

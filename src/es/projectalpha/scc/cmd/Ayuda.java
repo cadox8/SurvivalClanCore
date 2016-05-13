@@ -38,7 +38,7 @@ public class Ayuda implements CommandExecutor {
 					p.sendMessage(Messages.prefix + ChatColor.AQUA + "Información del plugin");
 					p.sendMessage(ChatColor.DARK_GREEN + "Versión: " + ChatColor.GOLD + this.plugin.getDescription().getVersion());
 					p.sendMessage(ChatColor.DARK_GREEN + "Autores: " + ChatColor.GOLD + this.plugin.getDescription().getAuthors());
-					p.sendMessage(ChatColor.DARK_GREEN + "Posibles Bugs: " + ChatColor.GOLD + "Trabajando en una forma fácil de poner bugs...");
+					p.sendMessage(ChatColor.DARK_GREEN + "Posibles Bugs: " + ChatColor.GOLD + "Natación");
 				}
 				if (args[0].equalsIgnoreCase("social")) {
 					p.sendMessage(Messages.prefix + ChatColor.AQUA + "Comandos de la Network");
