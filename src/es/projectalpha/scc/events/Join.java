@@ -1,6 +1,5 @@
 package es.projectalpha.scc.events;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.Calendar;
 import java.util.List;
@@ -9,7 +8,6 @@ import java.util.Random;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.configuration.InvalidConfigurationException;
-import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -28,9 +26,6 @@ import es.projectalpha.scc.utils.TeamsYML;
 public class Join implements Listener {
 
 	private SurvivalClanCore plugin;
-
-	File file = new File("plugins/SurvivalClanCore/", "config.yml");
-	YamlConfiguration en = YamlConfiguration.loadConfiguration(file);
 
 	public Join(SurvivalClanCore Main){
 		this.plugin = Main;
@@ -53,16 +48,6 @@ public class Join implements Listener {
 		if (Maintenance.enMantenimiento == true && !p.hasPermission("mantenimiento.estar")) {
 			p.kickPlayer(Messages.prefix + ChatColor.RED + "El servidor esta en mantenimiento, revisa el twitter para saber más" + ChatColor.AQUA + " @ProjectAlphaSV");
 			return;
-		}
-
-		if (!file.exists()) {
-			file.mkdir();
-			try {
-				en.save(file);
-				en.load(file);
-			} catch (IOException | InvalidConfigurationException e1) {
-				e1.printStackTrace();
-			}
 		}
 
 		if (team == null) {
@@ -104,15 +89,15 @@ public class Join implements Listener {
 		SurvivalClanCore.prefix.refreshPrefix();
 
 		if (day == 6) {
-			jugadores = en.getStringList("jugadores");
+			jugadores = SurvivalClanCore.en.getStringList("jugadores");
 
 			if (!jugadores.contains(p.getName())) {
 				jugadores.add(p.getName());
-				en.set("jugadores", jugadores);
+				SurvivalClanCore.en.set("jugadores", jugadores);
 
 				try {
-					en.save(file);
-					en.load(file);
+					SurvivalClanCore.en.save(SurvivalClanCore.file);
+					SurvivalClanCore.en.load(SurvivalClanCore.file);
 				} catch (IOException | InvalidConfigurationException e1) {
 					e1.printStackTrace();
 				}
@@ -123,6 +108,12 @@ public class Join implements Listener {
 				c.setItemMeta(cm);
 				p.getInventory().addItem(c);
 				p.sendMessage(Messages.prefix + ChatColor.GREEN + "Se te ha dado el cofre " + ChatColor.RED + "pequeño");
+			}
+		} else {
+			jugadores = SurvivalClanCore.en.getStringList("jugadores");
+
+			if (!jugadores.isEmpty()) {
+				SurvivalClanCore.en.set("jugadores", null);
 			}
 		}
 	}

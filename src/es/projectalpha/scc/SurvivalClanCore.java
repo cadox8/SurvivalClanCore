@@ -1,9 +1,13 @@
 package es.projectalpha.scc;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.configuration.InvalidConfigurationException;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scoreboard.Objective;
@@ -12,6 +16,8 @@ import org.bukkit.scoreboard.Team;
 
 import es.projectalpha.scc.api.TPSAPI;
 import es.projectalpha.scc.api.TabAPI;
+import es.projectalpha.scc.backpacks.BackpackCrafts;
+import es.projectalpha.scc.backpacks.BackpackManager;
 import es.projectalpha.scc.cmd.AddEffects;
 import es.projectalpha.scc.cmd.AirDropCMD;
 import es.projectalpha.scc.cmd.Ayuda;
@@ -22,9 +28,8 @@ import es.projectalpha.scc.cmd.Rol;
 import es.projectalpha.scc.cmd.Social;
 import es.projectalpha.scc.cmd.WikiTonterias;
 import es.projectalpha.scc.events.AirDropEvents;
-import es.projectalpha.scc.events.Colectibles;
+import es.projectalpha.scc.events.Interact;
 import es.projectalpha.scc.events.Damage;
-import es.projectalpha.scc.events.Effects;
 import es.projectalpha.scc.events.Join;
 import es.projectalpha.scc.events.Leave;
 import es.projectalpha.scc.events.Level;
@@ -55,7 +60,22 @@ public class SurvivalClanCore extends JavaPlugin {
 
 	public static SurvivalClanCore pl;
 
+	public static File file = new File("plugins/SurvivalClanCore/", "config.yml");
+	public static YamlConfiguration en = YamlConfiguration.loadConfiguration(file);
+
 	public void onEnable(){
+		if (!file.exists()) {
+			file.mkdir();
+			en.set("mochilaID", 0);
+			try {
+				en.save(file);
+				en.load(file);
+			} catch (IOException | InvalidConfigurationException e1) {
+				e1.printStackTrace();
+			}
+		}
+
+		BackpackCrafts.registerCrafts();
 
 		regEvents();
 		regCommands();
@@ -120,8 +140,9 @@ public class SurvivalClanCore extends JavaPlugin {
 		new Move(this);
 		new Join(this);
 		new Leave(this);
-		new Colectibles(this);
+		new Interact(this);
 		new Level(this);
+		new BackpackManager(this);
 
 		//EXP
 		//	new Throw(this);
@@ -132,9 +153,6 @@ public class SurvivalClanCore extends JavaPlugin {
 
 		//Chat
 		new Talk(this);
-
-		//Test
-		new Effects(this);
 
 		new AirDropEvents(this);
 	}
