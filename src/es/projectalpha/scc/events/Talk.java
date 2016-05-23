@@ -54,13 +54,6 @@ public class Talk implements Listener {
 
 		e.setFormat(chat);
 
-		if (e.getMessage().startsWith("#")) {
-			String[] message = e.getMessage().split(" ");
-			message[0].replaceAll(message[0], ChatColor.AQUA + "#" + ChatColor.GREEN + message[0].substring(1) + ChatColor.RESET);
-
-			e.setMessage(message.toString());
-		}
-
 		if (e.getMessage().equalsIgnoreCase("gg")) {
 			p.sendMessage(ChatColor.YELLOW + "* Buen Karma :D");
 			e.setMessage(getGGMessage());

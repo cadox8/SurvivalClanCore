@@ -8,15 +8,20 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.craftbukkit.v1_9_R2.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scoreboard.Objective;
 import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.Team;
 
+import net.minecraft.server.v1_9_R2.PacketPlayOutNamedEntitySpawn;
+import net.minecraft.server.v1_9_R2.PacketPlayOutPlayerInfo;
+import net.minecraft.server.v1_9_R2.PacketPlayOutPlayerInfo.EnumPlayerInfoAction;
+import net.minecraft.server.v1_9_R2.PlayerConnection;
+
 import es.projectalpha.scc.api.TPSAPI;
 import es.projectalpha.scc.api.TabAPI;
-import es.projectalpha.scc.backpacks.BackpackCrafts;
 import es.projectalpha.scc.backpacks.BackpackManager;
 import es.projectalpha.scc.cmd.AddEffects;
 import es.projectalpha.scc.cmd.AirDropCMD;
@@ -28,13 +33,14 @@ import es.projectalpha.scc.cmd.Rol;
 import es.projectalpha.scc.cmd.Social;
 import es.projectalpha.scc.cmd.WikiTonterias;
 import es.projectalpha.scc.events.AirDropEvents;
-import es.projectalpha.scc.events.Interact;
 import es.projectalpha.scc.events.Damage;
+import es.projectalpha.scc.events.Interact;
 import es.projectalpha.scc.events.Join;
 import es.projectalpha.scc.events.Leave;
 import es.projectalpha.scc.events.Level;
 import es.projectalpha.scc.events.Move;
 import es.projectalpha.scc.events.Talk;
+import es.projectalpha.scc.npc.NPC;
 import es.projectalpha.scc.signs.JoinRaza;
 import es.projectalpha.scc.signs.Teleport;
 import es.projectalpha.scc.utils.Messages;
@@ -75,7 +81,7 @@ public class SurvivalClanCore extends JavaPlugin {
 			}
 		}
 
-		BackpackCrafts.registerCrafts();
+		//	BackpackCrafts.registerCrafts();
 
 		regEvents();
 		regCommands();
@@ -97,6 +103,17 @@ public class SurvivalClanCore extends JavaPlugin {
 				prefix.refreshPrefix();
 
 				for (Player p : Bukkit.getOnlinePlayers()) {
+
+					for (int g = 0; g < NPC.npcList.size(); g++) {
+
+						if (!NPC.npcList.containsKey(g)) {
+							break;
+						}
+
+						PlayerConnection connection = ((CraftPlayer) p).getHandle().playerConnection;
+						connection.sendPacket(new PacketPlayOutPlayerInfo(EnumPlayerInfoAction.ADD_PLAYER, NPC.npcList.get(g)));
+						connection.sendPacket(new PacketPlayOutNamedEntitySpawn(NPC.npcList.get(g)));
+					}
 
 					String capi1 = ChatColor.BOLD.toString() + ChatColor.AQUA + " ProjectAlpha ";
 					String capi2 = ChatColor.BOLD.toString() + ChatColor.RED + " ProjectAlpha ";
@@ -131,6 +148,9 @@ public class SurvivalClanCore extends JavaPlugin {
 	public ArrayList<String> teleport = new ArrayList<String>();
 
 	public void onDisable(){
+		for (int g = 0; g < NPC.npcList.size(); g++) {
+			NPC.removeNPC(g);
+		}
 		Bukkit.getConsoleSender().sendMessage(Messages.prefix + ChatColor.RED + "Desactivado");
 	}
 
@@ -179,11 +199,11 @@ public class SurvivalClanCore extends JavaPlugin {
 		getCommand("lanzar").setExecutor(new Rol());
 		getCommand("reir").setExecutor(new Rol());
 		//WikiTonterias
-		getCommand("good").setExecutor(new WikiTonterias());
-		getCommand("cadox8").setExecutor(new WikiTonterias());
-		getCommand("purpurina").setExecutor(new WikiTonterias());
-		getCommand("enfado").setExecutor(new WikiTonterias());
-		getCommand("npc").setExecutor(new WikiTonterias());
+		getCommand("good").setExecutor(new WikiTonterias(this));
+		getCommand("cadox8").setExecutor(new WikiTonterias(this));
+		getCommand("purpurina").setExecutor(new WikiTonterias(this));
+		getCommand("enfado").setExecutor(new WikiTonterias(this));
+		getCommand("npc").setExecutor(new WikiTonterias(this));
 		//Report
 		getCommand("avisar").setExecutor(new Report());
 		//Social

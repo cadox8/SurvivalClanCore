@@ -3,5 +3,8 @@
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.7"/>
 	<classpathentry kind="lib" path="C:/Users/user/Desktop/Iván/Trabajo/plugins/APIs/spigot.jar"/>
+	<classpathentry kind="lib" path="C:/Users/user/Desktop/Iván/Trabajo/plugins/APIs/cglib-3.2.2.jar"/>
+	<classpathentry kind="lib" path="C:/Users/user/Desktop/Iván/Trabajo/plugins/APIs/worldedit-bukkit-6.1.jar"/>
+	<classpathentry kind="lib" path="C:/Users/user/Desktop/Iván/Trabajo/plugins/APIs/worldguard-6.0.0-beta-05.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

@@ -1,15 +1,28 @@
 package es.projectalpha.scc.cmd;
 
+import java.util.UUID;
+
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.Location;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import es.projectalpha.scc.api.NPCAPI;
+import com.mojang.authlib.GameProfile;
+
+import es.projectalpha.scc.SurvivalClanCore;
+import es.projectalpha.scc.npc.NPC;
 
 public class WikiTonterias implements CommandExecutor {
+
+	@SuppressWarnings("unused")
+	private SurvivalClanCore plugin;
+
+	public WikiTonterias(SurvivalClanCore Main){
+		this.plugin = Main;
+	}
 
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args){
 		Player p = (Player) sender;
@@ -20,10 +33,12 @@ public class WikiTonterias implements CommandExecutor {
 		}
 
 		if (cmd.getName().equalsIgnoreCase("npc") && ((sender instanceof Player))) {
-			if (args.length == 1) {
-				NPCAPI npc = new NPCAPI(args[0], p.getLocation());
-				npc.destroy();
-				npc.spawn();
+			if (args.length == 0) {
+				NPC npc = new NPC(new GameProfile(p.getUniqueId(), "cadox8"));
+				NPC.spawn(npc, new Location(p.getWorld(), p.getLocation().getX(), p.getLocation().getY(), p.getLocation().getZ()));
+
+				NPC npc2 = new NPC(new GameProfile(UUID.randomUUID(), "Prueba"));
+				NPC.spawn(npc2, new Location(p.getWorld(), p.getLocation().getX() + 2, p.getLocation().getY(), p.getLocation().getZ() + 4));
 			}
 		}
 
