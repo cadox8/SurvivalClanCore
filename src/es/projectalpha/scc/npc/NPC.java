@@ -38,6 +38,9 @@ public class NPC extends EntityPlayer {
 
 		npc.setLocation(l.getX(), l.getY(), l.getZ(), 0, 0);
 
+		npc.setOnFire(900);
+
+		//Testing
 		npc.setInvulnerable(true);
 		npc.setEquipment(EnumItemSlot.MAINHAND, new ItemStack(Block.getByName(Material.COMMAND.toString())));
 		npc.setEquipment(EnumItemSlot.OFFHAND, new ItemStack(Block.getById(64)));
