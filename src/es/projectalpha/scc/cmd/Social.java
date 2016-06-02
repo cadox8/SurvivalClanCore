@@ -8,6 +8,7 @@ import org.bukkit.entity.Player;
 
 import es.projectalpha.scc.api.JsonAPI;
 import es.projectalpha.scc.utils.Messages;
+import es.projectalpha.scc.utils.PC;
 
 public class Social implements CommandExecutor {
 
@@ -31,6 +32,17 @@ public class Social implements CommandExecutor {
 		if (cmd.getName().equalsIgnoreCase("ts") && ((sender instanceof Player))) {
 			if (args.length == 0) {
 				p.sendMessage(Messages.prefix + "Nuestro TeamSpeak es: " + ChatColor.GOLD + "projectalpha.es");
+				JsonAPI.jsonMessages(p, ChatColor.AQUA + "Click para abrir el TS", "IP: projectalpha.es", ChatColor.RED, "/ts open");
+			}
+
+			if (args.length == 1) {
+				if (args[0].equalsIgnoreCase("open")) {
+					try {
+						PC.openURL("ts3server://projectalpha.es");
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+				}
 			}
 		}
 		if (cmd.getName().equalsIgnoreCase("foro") && ((sender instanceof Player))) {
