@@ -1,6 +1,0 @@
-npcs:
-  'loplerino':
-    data:
-      entity: 'Zombie'
-      nbt: '{Age:-300}'
-      

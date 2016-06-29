@@ -13,11 +13,12 @@ import org.bukkit.entity.Player;
 import com.mojang.authlib.GameProfile;
 
 import es.projectalpha.scc.SurvivalClanCore;
+import es.projectalpha.scc.api.ParticleAPI;
 import es.projectalpha.scc.npc.NPC;
+import es.projectalpha.scc.utils.Randoms;
 
 public class WikiTonterias implements CommandExecutor {
 
-	@SuppressWarnings("unused")
 	private SurvivalClanCore plugin;
 
 	public WikiTonterias(SurvivalClanCore Main){
@@ -25,10 +26,19 @@ public class WikiTonterias implements CommandExecutor {
 	}
 
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args){
-		Player p = (Player) sender;
+		final Player p = (Player) sender;
 		if (cmd.getName().equalsIgnoreCase("good") && ((sender instanceof Player))) {
 			if (args.length == 0) {
 				Bukkit.broadcastMessage(getMessage(p));
+
+				Bukkit.getScheduler().scheduleSyncRepeatingTask(this.plugin, new Runnable() {
+
+					@Override
+					public void run(){
+						ParticleAPI.setButterfly(p.getLocation(), p.getLocation(), Randoms.randomOrdinaryColor(), Randoms.randomOrdinaryColor(), Randoms.randomOrdinaryColor());
+
+					}
+				}, 0L, 1L);
 			}
 		}
 
